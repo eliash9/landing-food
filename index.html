@@ -99,6 +99,21 @@
 <body>
   <div class="hero-bg"></div>
 
+  <!-- Promo musiman -->
+  <div id="promo-banner" class="max-w-6xl mx-auto px-5 mt-3 hidden">
+    <div class="glass p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="text-sm">
+        <strong>Promo Musim Panas:</strong> HEMAT10 (diskon 10% hingga Rp20.000) atau ONGKIR (gratis ongkir). 
+        <span class="hidden sm:inline">Berlaku terbatas!</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="btn-soft text-sm" data-copy="HEMAT10">Salin HEMAT10</button>
+        <button class="btn-soft text-sm" data-copy="ONGKIR">Salin ONGKIR</button>
+        <button id="promo-close" class="btn-soft text-sm">Tutup</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Top nav -->
   <header class="max-w-6xl mx-auto px-5 pt-6">
     <div class="flex items-center justify-between">
@@ -246,7 +261,95 @@
     </div>
   </section>
 
+  <!-- Testimoni -->
+  <section class="max-w-6xl mx-auto px-5 mt-12">
+    <div class="text-center">
+      <h4 class="text-2xl font-semibold">Testimoni Pelanggan</h4>
+      <p class="text-sm text-[var(--muted)]">Apa kata mereka tentang FOODEAT</p>
+    </div>
+    <div class="mt-6 grid md:grid-cols-3 gap-6">
+      <div class="glass p-5">
+        <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-[#111] text-white grid place-items-center">A</div><div><div class="font-semibold">Aditya</div><div class="text-[12px] text-[var(--muted)]">Jakarta</div></div></div>
+        <div class="mt-3 text-amber-500">★★★★★</div>
+        <p class="text-sm text-[var(--muted)] mt-2">Rasanya mantap, pengiriman cepat. Porsi pas dan topping melimpah.</p>
+      </div>
+      <div class="glass p-5">
+        <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-[#111] text-white grid place-items-center">S</div><div><div class="font-semibold">Sinta</div><div class="text-[12px] text-[var(--muted)]">Bandung</div></div></div>
+        <div class="mt-3 text-amber-500">★★★★☆</div>
+        <p class="text-sm text-[var(--muted)] mt-2">Mi-nya kenyal, kuah pedasnya nendang. Recomended buat makan siang!</p>
+      </div>
+      <div class="glass p-5">
+        <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-[#111] text-white grid place-items-center">R</div><div><div class="font-semibold">Ricky</div><div class="text-[12px] text-[var(--muted)]">Surabaya</div></div></div>
+        <div class="mt-3 text-amber-500">★★★★★</div>
+        <p class="text-sm text-[var(--muted)] mt-2">Sudah langganan. Favorit keluarga, terutama mi pedasnya!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="max-w-6xl mx-auto px-5 mt-12">
+    <div class="text-center">
+      <h4 class="text-2xl font-semibold">FAQ</h4>
+      <p class="text-sm text-[var(--muted)]">Pertanyaan yang sering ditanyakan</p>
+    </div>
+    <div class="mt-6 grid md:grid-cols-2 gap-4" id="faq">
+      <div class="glass p-4">
+        <button class="w-full text-left font-semibold flex justify-between items-center" data-acc>
+          Bagaimana cara memesan?
+          <span>+</span>
+        </button>
+        <div class="mt-2 text-sm text-[var(--muted)] hidden">Pilih menu, klik tambah ke keranjang, lalu lanjutkan ke halaman keranjang untuk pembayaran.</div>
+      </div>
+      <div class="glass p-4">
+        <button class="w-full text-left font-semibold flex justify-between items-center" data-acc>
+          Apakah ada gratis ongkir?
+          <span>+</span>
+        </button>
+        <div class="mt-2 text-sm text-[var(--muted)] hidden">Gratis ongkir untuk pembelian minimal Rp50.000 atau gunakan kode promo ONGKIR.</div>
+      </div>
+      <div class="glass p-4">
+        <button class="w-full text-left font-semibold flex justify-between items-center" data-acc>
+          Jam operasional?
+          <span>+</span>
+        </button>
+        <div class="mt-2 text-sm text-[var(--muted)] hidden">Senin - Minggu: 10.00 - 22.00 WIB.</div>
+      </div>
+      <div class="glass p-4">
+        <button class="w-full text-left font-semibold flex justify-between items-center" data-acc>
+          Metode pembayaran yang tersedia?
+          <span>+</span>
+        </button>
+        <div class="mt-2 text-sm text-[var(--muted)] hidden">Transfer bank, e-wallet, dan COD (khusus area tertentu).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lokasi & Jam Buka -->
+  <section class="max-w-6xl mx-auto px-5 mt-12 mb-16" id="lokasi">
+    <div class="text-center">
+      <h4 class="text-2xl font-semibold">Lokasi & Jam Buka</h4>
+      <p class="text-sm text-[var(--muted)]">Jl. Contoh No. 123, Jakarta</p>
+    </div>
+    <div class="mt-6 grid md:grid-cols-2 gap-6 items-start">
+      <div class="glass p-4">
+        <div class="font-semibold">Jam Operasional</div>
+        <ul class="text-sm text-[var(--muted)] mt-2">
+          <li>Senin - Jumat: 10:00 - 22:00</li>
+          <li>Sabtu - Minggu: 10:00 - 23:00</li>
+          <li>Hari libur nasional: Buka</li>
+        </ul>
+        <a href="https://wa.me/628123456789?text=Halo%20FOODEAT%2C%20saya%20ingin%20pesan" target="_blank" rel="noopener" class="btn-soft mt-4 inline-block" data-variant="primary">Pesan via WA</a>
+      </div>
+      <div class="glass overflow-hidden">
+        <iframe title="map" src="https://www.google.com/maps?q=Jakarta&output=embed" style="border:0; width:100%; height:280px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+
   <footer class="text-center text-xs text-[var(--muted)] pb-10">© 2025 FOODEAT. Hak cipta dilindungi.</footer>
+
+  <!-- Floating WhatsApp CTA -->
+  <a href="https://wa.me/628123456789?text=Halo%20FOODEAT%2C%20saya%20ingin%20pesan" target="_blank" rel="noopener" class="fixed right-4 bottom-20 sm:bottom-6 z-50 btn-soft" aria-label="Pesan via WhatsApp">Pesan via WA</a>
 
   <!-- Toast add-to-cart -->
   <div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-50 hidden">
@@ -399,6 +502,30 @@
       applyTheme(now);
     };
     initTheme();
+
+    // Promo banner show/hide + copy code
+    const banner = document.getElementById('promo-banner');
+    const closed = localStorage.getItem('promoClosed') === '1';
+    if (banner && !closed) banner.classList.remove('hidden');
+    const closeBtn = document.getElementById('promo-close');
+    if (closeBtn) closeBtn.onclick = ()=>{ banner.classList.add('hidden'); localStorage.setItem('promoClosed','1'); };
+    banner?.querySelectorAll('[data-copy]')?.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const code = btn.getAttribute('data-copy');
+        navigator.clipboard?.writeText(code);
+        btn.textContent = 'Disalin';
+        setTimeout(()=> btn.textContent = `Salin ${code}`, 1200);
+      });
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('#faq [data-acc]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const content = btn.nextElementSibling;
+        if (!content) return;
+        content.classList.toggle('hidden');
+      });
+    });
   </script>
 </body>
 </html>

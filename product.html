@@ -136,6 +136,31 @@
     </div>
   </div>
 
+  <!-- Sering dibeli bersama -->
+  <section class="max-w-6xl mx-auto px-5 mt-10">
+    <h2 class="text-xl font-semibold">Sering dibeli bersama</h2>
+    <div id="reco" class="mt-4 grid sm:grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- Ulasan Pengguna -->
+  <section class="max-w-6xl mx-auto px-5 mt-10 mb-16">
+    <h2 class="text-xl font-semibold">Rating & Ulasan</h2>
+    <div id="rating-summary" class="mt-2 text-sm text-[var(--muted)]">Belum ada ulasan.</div>
+    <div id="reviews" class="mt-4 grid gap-3"></div>
+    <div class="glass p-4 mt-5">
+      <div class="font-semibold mb-2">Tulis ulasan</div>
+      <form id="review-form" class="grid gap-3">
+        <input id="rev-name" class="border rounded px-3 py-2 text-sm" placeholder="Nama (opsional)">
+        <div class="text-sm">Rating: 
+          <span id="stars" class="cursor-pointer select-none text-amber-500">☆☆☆☆☆</span>
+          <span id="stars-val" class="ml-2 text-[var(--muted)]">0/5</span>
+        </div>
+        <textarea id="rev-text" rows="3" class="border rounded px-3 py-2 text-sm" placeholder="Bagikan pengalaman Anda..."></textarea>
+        <button class="btn-soft w-max" type="submit" data-variant="primary">Kirim Ulasan</button>
+      </form>
+    </div>
+  </section>
+
   <script>
     const PRODUCTS = {
       'noodles-1': {
@@ -230,6 +255,89 @@
     // Listen option change to update price
     document.getElementById('opt-spicy').onchange = updatePrice;
     document.querySelectorAll('.opt-top').forEach(c=> c.onchange = updatePrice);
+
+    // Render rekomendasi (produk lain)
+    const reco = document.getElementById('reco');
+    if (reco) {
+      const others = Object.keys(PRODUCTS).filter(k=>k!==p.id).slice(0,3);
+      others.forEach(k=>{
+        const it = PRODUCTS[k];
+        const card = document.createElement('div');
+        card.className = 'glass p-4 flex gap-3 items-center';
+        card.innerHTML = `
+          <img src="${it.image}" alt="${it.name}" loading="lazy" decoding="async" class="w-16 h-16 rounded object-cover"/>
+          <div class="flex-1">
+            <div class="font-semibold">${it.name}</div>
+            <div class="text-[13px] text-[var(--muted)]">${formatRupiah(it.price)}</div>
+          </div>
+          <div class="flex gap-2">
+            <a class="btn-soft text-sm" href="product.html?id=${it.id}">Detail</a>
+            <button class="btn-soft text-sm" data-add="${it.id}">Tambah</button>
+          </div>
+        `;
+        reco.appendChild(card);
+      });
+      reco.querySelectorAll('button[data-add]').forEach(btn=>{
+        btn.onclick = ()=>{
+          const it = PRODUCTS[btn.getAttribute('data-add')];
+          addToCart({ id: it.id, name: it.name, price: it.price, image: it.image, qty: 1 });
+          showToast(`${it.name} ditambahkan`, null);
+        };
+      });
+    }
+
+    // Ulasan - localStorage
+    const REV_KEY = (id)=>`reviews-${id}`;
+    const getReviews = ()=>{ try { return JSON.parse(localStorage.getItem(REV_KEY(p.id))||'[]'); } catch { return []; } };
+    const saveReviews = (arr)=> localStorage.setItem(REV_KEY(p.id), JSON.stringify(arr));
+    const renderReviews = ()=>{
+      const cont = document.getElementById('reviews');
+      const sum = document.getElementById('rating-summary');
+      const arr = getReviews();
+      cont.innerHTML = '';
+      if (arr.length===0) {
+        sum.textContent = 'Belum ada ulasan.';
+        return;
+      }
+      const avg = arr.reduce((s,r)=>s+r.rating,0)/arr.length;
+      sum.textContent = `Rata-rata ${avg.toFixed(1)}/5 dari ${arr.length} ulasan`;
+      arr.slice().reverse().forEach(r=>{
+        const d = document.createElement('div');
+        d.className = 'glass p-4';
+        const stars = '★★★★★☆☆☆☆☆'.slice(5 - Math.round(r.rating), 10 - Math.round(r.rating));
+        d.innerHTML = `<div class="flex items-center justify-between"><div class="font-semibold">${r.name||'Anonim'}</div><div class="text-amber-500">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div></div><p class="text-sm text-[var(--muted)] mt-2">${r.text||''}</p>`;
+        cont.appendChild(d);
+      });
+    };
+    renderReviews();
+
+    // Bintang interaktif
+    let starVal = 0;
+    const starEl = document.getElementById('stars');
+    const starOut = document.getElementById('stars-val');
+    const setStars = (n)=>{ starVal=n; starEl.textContent = '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n); starOut.textContent = `${n}/5`; };
+    starEl.addEventListener('mousemove', (e)=>{
+      const rect = starEl.getBoundingClientRect();
+      const ratio = Math.min(1, Math.max(0, (e.clientX-rect.left)/rect.width));
+      setStars(Math.max(1, Math.min(5, Math.ceil(ratio*5))));
+    });
+    starEl.addEventListener('mouseleave', ()=>{ if (!starVal) setStars(0); });
+    starEl.addEventListener('click', ()=>{ if(!starVal) setStars(3); });
+
+    // Submit ulasan
+    const form = document.getElementById('review-form');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('rev-name').value.trim();
+      const text = document.getElementById('rev-text').value.trim();
+      const rating = Math.max(1, Math.min(5, starVal||3));
+      const arr = getReviews();
+      arr.push({ name, text, rating, date: Date.now() });
+      saveReviews(arr);
+      form.reset(); setStars(0);
+      renderReviews();
+      showToast('Terima kasih atas ulasannya!', null);
+    });
 
     // Theme toggle
     const themeBtn = document.getElementById('theme-toggle');
