@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Detail Produk - FOODEAT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#F59E0B;
+      --text:#111111;
+      --muted:#6B7280;
+      --card: rgba(255, 255, 255, .64);
+      --shadow: 0 20px 60px rgba(0,0,0,.22);
+    }
+    body{ font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background: #fff7ed; color:var(--text); font-weight:400; }
+    .dark body{ background:#0b0b0c; color:#efefef; }
+    .dark .hero-bg{ filter: blur(55px) saturate(90%); background:
+      radial-gradient(60vmax 60vmax at 0% 15%, rgba(255,140,0,.28), transparent 65%),
+      radial-gradient(55vmax 55vmax at 90% 8%, rgba(253,186,116,.25), transparent 62%),
+      radial-gradient(70vmax 70vmax at 40% 65%, rgba(59, 130, 246,.15), transparent 60%),
+      linear-gradient(180deg, #0b0b0c 0%, #111113 100%);
+    }
+    .dark .glass{ background: linear-gradient(180deg, rgba(18,18,20,.86), rgba(18,18,20,.62)); border-color: rgba(255,255,255,.08); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .dark .btn-soft{ background:#1a1c1f; color:#fff; border-color:rgba(255,255,255,.06); }
+    .hero-bg{ position: fixed; inset: -20vmax; z-index:-1; filter: blur(55px);
+      background:
+        radial-gradient(60vmax 60vmax at 0% 15%, rgba(253,186,116,.55), transparent 65%),
+        radial-gradient(55vmax 55vmax at 90% 8%, rgba(251,146,60,.50), transparent 62%),
+        radial-gradient(70vmax 70vmax at 40% 65%, rgba(245,158,11,.35), transparent 60%),
+        linear-gradient(180deg, #fff7ed 0%, #fff1e6 100%);
+      animation: floaty 18s ease-in-out infinite;
+    }
+    .glass{ background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,247,235,.62)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 24px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.7); }
+    .shadow-soft{ box-shadow: 0 12px 32px rgba(0,0,0,.18); }
+    .ring-shadow{ box-shadow: 0 26px 70px rgba(0,0,0,.25); }
+    .btn-soft{ position:relative; padding:.8rem 1.2rem; border-radius:9999px; background:#f8fafc; color:#111; font-weight:500; box-shadow: 0 10px 22px rgba(0,0,0,.10) inset, 0 2px 0 rgba(255,255,255,.95) inset; border:1px solid rgba(0,0,0,.05); transition: transform .2s ease, box-shadow .25s ease; }
+    .btn-soft[data-variant="primary"]{ background: linear-gradient(180deg,#ffe9c9,#ffcf90); border-color:rgba(245,158,11,.28); }
+    .btn-soft:hover{ transform: translateY(-2px); box-shadow: 0 18px 40px rgba(255,153,0,.25), 0 10px 24px rgba(0,0,0,.10) inset; }
+    h1,h2,h3,h4{ font-weight:600; }
+    @keyframes floaty{ 0%,100%{ transform: translateY(-8px) } 50%{ transform: translateY(8px) } }
+  </style>
+</head>
+<body>
+  <div class="hero-bg"></div>
+
+  <header class="max-w-6xl mx-auto px-5 pt-6">
+    <div class="flex items-center justify-between">
+      <a class="text-xl font-semibold tracking-wide" href="index.html" style="letter-spacing:.5px">
+        <span class="text-[var(--accent)]">FOO</span><span class="text-[#111]">DEAT</span>
+      </a>
+      <nav class="hidden sm:flex items-center gap-8 text-sm text-[#1b1b1b]">
+        <a class="nav-link" href="index.html#home">BERANDA</a>
+        <a class="nav-link" href="index.html#menu">MENU</a>
+        <a class="nav-link" href="#">DETAIL</a>
+        <a href="cart.html" class="relative">KERANJANG <span id="cart-count" class="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] rounded-full bg-[var(--accent)] text-white align-middle">0</span></a>
+        <button id="theme-toggle" aria-label="ganti tema" class="btn-soft text-xs">Tema</button>
+      </nav>
+      <!-- Mobile actions -->
+      <div class="sm:hidden flex items-center gap-3">
+        <a href="cart.html" class="relative text-sm">KERANJANG <span id="cart-count-mobile" class="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] rounded-full bg-[var(--accent)] text-white align-middle">0</span></a>
+        <button id="mobile-toggle" aria-label="buka menu" class="btn-soft text-sm">Menu</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="sm:hidden hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="relative bg-white/90 backdrop-blur-md border-b shadow-soft p-5 pt-16">
+      <button id="mobile-close" class="btn-soft absolute top-4 right-4 text-sm">Tutup</button>
+      <nav class="flex flex-col gap-4 text-sm text-[#1b1b1b]">
+        <a class="nav-link" href="index.html#home">Beranda</a>
+        <a class="nav-link" href="index.html#menu">Menu</a>
+        <a class="nav-link" href="#">Detail</a>
+        <a href="cart.html">Keranjang</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-5 mt-10 grid md:grid-cols-2 gap-10 items-start">
+    <div class="flex justify-center">
+      <img id="prod-image" alt="product image" loading="lazy" decoding="async" class="w-[420px] h-[420px] md:w-[480px] md:h-[480px] object-cover rounded-[26px] ring-8 ring-white ring-offset-0 ring-offset-transparent ring-shadow shadow-soft" src=""/>
+    </div>
+    <div>
+      <h1 id="prod-name" class="text-3xl md:text-4xl font-semibold leading-tight">Nama Produk</h1>
+      <div class="mt-2 text-[var(--muted)]" id="prod-rating">Rating: 0.0</div>
+      <div class="mt-3 text-2xl font-semibold"><span id="prod-price">Rp0</span></div>
+      <p id="prod-desc" class="text-[15px] text-[var(--muted)] mt-4">Deskripsi</p>
+
+      <div class="mt-6 flex items-center gap-3">
+        <div class="inline-flex items-center border rounded-full overflow-hidden">
+          <button id="qty-dec" class="px-3 py-2">-</button>
+          <span id="qty" class="px-4 select-none">1</span>
+          <button id="qty-inc" class="px-3 py-2">+</button>
+        </div>
+        <button id="btn-add" class="btn-soft" data-variant="primary">Tambah ke Keranjang</button>
+        <a href="cart.html" class="btn-soft">Lihat Keranjang</a>
+      </div>
+
+      <!-- Variasi & Catatan -->
+      <div class="mt-6 grid gap-4">
+        <div>
+          <label class="text-sm">Level Pedas</label>
+          <select id="opt-spicy" class="mt-1 border rounded px-3 py-2 text-sm">
+            <option value="0">Tidak pedas (+Rp0)</option>
+            <option value="2000">Sedang (+Rp2.000)</option>
+            <option value="4000">Pedas (+Rp4.000)</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm">Topping</label>
+          <div class="mt-1 grid grid-cols-2 gap-2 text-sm">
+            <label class="inline-flex items-center gap-2"><input type="checkbox" class="opt-top" value="3000" data-name="Telur"> Telur (+Rp3.000)</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" class="opt-top" value="5000" data-name="Ekstra udang"> Ekstra udang (+Rp5.000)</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" class="opt-top" value="4000" data-name="Bakso"> Bakso (+Rp4.000)</label>
+          </div>
+        </div>
+        <div>
+          <label class="text-sm">Catatan</label>
+          <textarea id="note" rows="2" class="mt-1 w-full border rounded px-3 py-2 text-sm" placeholder="Contoh: kuah dipisah, sedikit minyak..."></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast add-to-cart -->
+  <div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-50 hidden">
+    <div class="glass px-4 py-3 flex items-center gap-3">
+      <span id="toast-msg">Ditambahkan ke keranjang</span>
+      <button id="toast-undo" class="btn-soft text-sm">Urungkan</button>
+      <button id="toast-close" class="btn-soft text-sm">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    const PRODUCTS = {
+      'noodles-1': {
+        id: 'noodles-1', name: 'Mi Satu', price: 20000,
+        image: 'images/lovepik-egg-instant-noodles-png-image_401428067_wh1200.png',
+        rating: 9.2,
+        desc: 'Mi rebus pedas dengan seafood dan daging babi dalam hot pot'
+      },
+      'noodles-2': {
+        id: 'noodles-2', name: 'Mi Dua', price: 16000,
+        image: 'images/png-clipart-pasta-dish-on-plate-ramen-instant-noodle-mie-goreng-indomie-food-soups-miscellaneous-soup-thumbnail.png',
+        rating: 8.5,
+        desc: 'Mi sup pedas udang'
+      },
+      'noodles-3': {
+        id: 'noodles-3', name: 'Mi Tiga', price: 12000,
+        image: 'images/pngtree-indomie-bacon-and-eggs-png-image_13344417.png',
+        rating: 8.1,
+        desc: 'Piring putih dengan udang kering'
+      }
+    };
+
+    // Cart helpers (same as index)
+    const CART_KEY = 'cart';
+    const getCart = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
+    const saveCart = (cart) => { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartCount(); };
+    const updateCartCount = () => {
+      const c = getCart().reduce((n,i)=>n+(i.qty||0),0);
+      const el=document.getElementById('cart-count'); if(el) el.textContent=String(c);
+      const elM=document.getElementById('cart-count-mobile'); if(elM) elM.textContent=String(c);
+    };
+    const addToCart = (item) => { const cart=getCart(); const i=cart.findIndex(x=>x.id===item.id && JSON.stringify(x.options||[])===JSON.stringify(item.options||[]) && (x.note||'')===(item.note||'')); if(i>=0) cart[i].qty+=(item.qty||1); else cart.push({...item, qty:item.qty||1}); saveCart(cart); };
+
+    // Load product
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || 'noodles-1';
+    const p = PRODUCTS[id] || PRODUCTS['noodles-1'];
+    const formatRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format;
+    document.getElementById('prod-name').textContent = p.name;
+    const priceEl = document.getElementById('prod-price');
+    const calcExtra = () => {
+      const spicy = parseInt(document.getElementById('opt-spicy').value||'0',10);
+      let tops = 0; document.querySelectorAll('.opt-top:checked').forEach(c=> tops += parseInt(c.value||'0',10));
+      return spicy + tops;
+    };
+    const updatePrice = () => { priceEl.textContent = formatRupiah(p.price + calcExtra()); };
+    updatePrice();
+    document.getElementById('prod-desc').textContent = p.desc;
+    document.getElementById('prod-rating').textContent = `Rating: ${p.rating}`;
+    document.getElementById('prod-image').src = p.image;
+    updateCartCount();
+
+    // Qty controls
+    let qty = 1; const qtyEl = document.getElementById('qty');
+    document.getElementById('qty-inc').onclick = () => { qty = Math.min(99, qty+1); qtyEl.textContent = qty; };
+    document.getElementById('qty-dec').onclick = () => { qty = Math.max(1, qty-1); qtyEl.textContent = qty; };
+
+    // Toast helpers
+    let toastTimer = null;
+    const showToast = (message, undoCb) => {
+      const t = document.getElementById('toast');
+      const msg = document.getElementById('toast-msg');
+      const undo = document.getElementById('toast-undo');
+      const close = document.getElementById('toast-close');
+      msg.textContent = message || 'Ditambahkan ke keranjang';
+      t.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> t.classList.add('hidden'), 3000);
+      undo.onclick = () => { if (undoCb) undoCb(); t.classList.add('hidden'); };
+      close.onclick = () => t.classList.add('hidden');
+    };
+
+    document.getElementById('btn-add').onclick = () => {
+      const spicy = parseInt(document.getElementById('opt-spicy').value||'0',10);
+      const tops = Array.from(document.querySelectorAll('.opt-top:checked')).map(c=>({ name: c.dataset.name, add: parseInt(c.value||'0',10) }));
+      const note = (document.getElementById('note').value||'').trim();
+      const extra = spicy + tops.reduce((s,t)=>s+t.add,0);
+      const options = [spicy>0?`Pedas +${formatRupiah(spicy)}`:'Tidak pedas', ...tops.map(t=>`${t.name} +${formatRupiah(t.add)}`)];
+      addToCart({ id: p.id, name: p.name, price: p.price + extra, image: p.image, qty, options, note });
+      showToast(`${p.name} ditambahkan x${qty}`, () => {
+        // Undo
+        const cart = getCart();
+        const idx = cart.findIndex(i => i.id === p.id && JSON.stringify(i.options||[])===JSON.stringify(options) && (i.note||'')===note);
+        if (idx >= 0) {
+          cart[idx].qty = Math.max(0, (cart[idx].qty||1) - qty);
+          if (cart[idx].qty === 0) cart.splice(idx,1);
+          saveCart(cart);
+        }
+      });
+    };
+
+    // Listen option change to update price
+    document.getElementById('opt-spicy').onchange = updatePrice;
+    document.querySelectorAll('.opt-top').forEach(c=> c.onchange = updatePrice);
+
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    const applyTheme = (t)=>{ const root=document.documentElement; if (t==='dark') root.classList.add('dark'); else root.classList.remove('dark'); localStorage.setItem('theme', t); };
+    const initTheme = ()=>{ const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); applyTheme(saved); };
+    if (themeBtn) themeBtn.onclick = ()=>{ const now = document.documentElement.classList.contains('dark') ? 'light' : 'dark'; applyTheme(now); };
+    initTheme();
+
+    // Mobile menu toggle
+    const mm = document.getElementById('mobile-menu');
+    const mt = document.getElementById('mobile-toggle');
+    const mc = document.getElementById('mobile-close');
+    if (mt && mm) mt.onclick = () => { mm.classList.toggle('hidden'); };
+    if (mc && mm) mc.onclick = () => { mm.classList.add('hidden'); };
+    if (mm) mm.addEventListener('click', (e)=>{ if (e.target === mm) mm.classList.add('hidden'); });
+    document.querySelectorAll('#mobile-menu a').forEach(a=> a.addEventListener('click', ()=> mm && mm.classList.add('hidden')));
+  </script>
+</body>
+</html>

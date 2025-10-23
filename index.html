@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FOODEAT — Delicious Food Is Waiting For You</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#F59E0B; /* amber like on the mockup top-left logo */
+      --green:#5FAF45;
+      --text:#111111;
+      --muted:#6B7280;
+      --bg1:#F5F7FA;
+      /* Softer glass card tone with warm tint */
+      --card: rgba(255, 255, 255, .64);
+      --glass: 18px;
+      /* Deeper default shadow */
+      --shadow: 0 20px 60px rgba(0,0,0,.22);
+    }
+    html,body{ height:100%; }
+    body{ font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background: #fff7ed; color:var(--text); font-weight:400; letter-spacing:.1px;} 
+    /* Dark theme */
+    .dark body{ background:#0b0b0c; color:#efefef; }
+    .dark .hero-bg{ filter: blur(55px) saturate(90%); background:
+      radial-gradient(60vmax 60vmax at 0% 15%, rgba(255,140,0,.28), transparent 65%),
+      radial-gradient(55vmax 55vmax at 90% 8%, rgba(253,186,116,.25), transparent 62%),
+      radial-gradient(70vmax 70vmax at 40% 65%, rgba(59, 130, 246,.15), transparent 60%),
+      linear-gradient(180deg, #0b0b0c 0%, #111113 100%);
+    }
+    .dark .glass{ background: linear-gradient(180deg, rgba(18,18,20,.86), rgba(18,18,20,.62)); border-color: rgba(255,255,255,.08); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .dark .btn-soft{ background:#1a1c1f; color:#fff; border-color:rgba(255,255,255,.06); }
+    .dark .service-icon{ background:#fff; color:#000; }
+
+    /* === Background gradient & blur blobs to mimic the design === */
+    .hero-bg{
+      position: fixed; inset: -20vmax; z-index:-1; filter: blur(55px);
+      background:
+        radial-gradient(60vmax 60vmax at 0% 15%, rgba(253,186,116,.55), transparent 65%),
+        radial-gradient(55vmax 55vmax at 90% 8%, rgba(251,146,60,.50), transparent 62%),
+        radial-gradient(70vmax 70vmax at 40% 65%, rgba(245,158,11,.35), transparent 60%),
+        linear-gradient(180deg, #fff7ed 0%, #fff1e6 100%);
+      animation: floaty 18s ease-in-out infinite;
+    }
+    .hero-bg:after{
+      content:""; position:absolute; inset:-10%;
+      background: conic-gradient(from 90deg, rgba(255,153,0,.18), rgba(255,237,213,.08), rgba(255,153,0,.18));
+      filter: blur(95px); opacity:.55; mix-blend-mode: screen; border-radius:40% 60% 50% 50%/60% 40% 60% 40%;
+      animation: swirl 22s ease-in-out infinite alternate;
+    }
+
+    /* Glass panels */
+    .glass{ background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,247,235,.62)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 24px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.7); transition: transform .25s ease, box-shadow .25s ease; }
+    .glass:hover{ transform: translateY(-4px); box-shadow: 0 28px 80px rgba(0,0,0,.28); }
+
+    /* Header underline animation similar to mock */
+    .nav-link{ position:relative; }
+    .nav-link:after{ content:''; position:absolute; left:0; right:0; bottom:-6px; margin:auto; width:0; height:2px; background:#111; transition: width .25s ease; }
+    .nav-link.active:after, .nav-link:hover:after{ width:100%; }
+
+    /* CTA button with soft 3D & ripple */
+    .btn-soft{ position:relative; padding:.8rem 1.2rem; border-radius:9999px; background:#f8fafc; color:#111; font-weight:500; box-shadow: 0 10px 22px rgba(0,0,0,.10) inset, 0 2px 0 rgba(255,255,255,.95) inset; border:1px solid rgba(0,0,0,.05); transition: transform .2s ease, box-shadow .25s ease; }
+    .btn-soft[data-variant="primary"]{ background: linear-gradient(180deg,#ffe9c9,#ffcf90); border-color:rgba(245,158,11,.28); }
+    .btn-soft:hover{ transform: translateY(-2px); box-shadow: 0 18px 40px rgba(255,153,0,.25), 0 10px 24px rgba(0,0,0,.10) inset; }
+    .btn-soft:active{ transform: translateY(0); }
+    .btn-soft .ripple{ position:absolute; border-radius:9999px; transform:scale(0); opacity:.6; background:rgba(255,255,255,.7); animation:ripple .7s ease-out; pointer-events:none; }
+    @keyframes ripple{ to{ transform:scale(7); opacity:0; } }
+
+    /* Dish ring shadow like the big bowl */
+    .ring-shadow{ box-shadow: 0 26px 70px rgba(0,0,0,.25); }
+    .shadow-hard{ box-shadow: 0 32px 90px rgba(0,0,0,.30); }
+    .floaty{ animation: floaty 8s ease-in-out infinite; }
+    @keyframes floaty{ 0%,100%{ transform: translateY(-8px) } 50%{ transform: translateY(8px) } }
+    @keyframes swirl{ 0%{ transform: rotate(0deg) scale(1)} 100%{ transform: rotate(8deg) scale(1.05)} }
+
+    /* Card rating star color */
+    .star{ color:#F59E0B; }
+
+    /* Floating fries section lighting */
+    .glow-bottom{ box-shadow: 0 60px 160px rgba(255,149,0,.45); }
+
+    /* Add-to-cart circle button */
+    .plus-btn{ width:34px; height:34px; border-radius:9999px; display:grid; place-items:center; background:#111; color:#fff; transition: transform .18s ease, background .2s ease, box-shadow .2s ease; box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+    .plus-btn:hover{ transform: translateY(-2px) scale(1.05); background:#000; box-shadow: 0 16px 36px rgba(0,0,0,.28); }
+
+    /* Small icons row */
+    .service-icon{ display:grid; place-items:center; width:38px; height:38px; border-radius:9999px; background:#111; color:#fff; transition: transform .2s ease; }
+    .service-icon:hover{ transform: translateY(-3px) rotate(-4deg); }
+
+    /* Utilities close to Tailwind look from mock */
+    .shadow-soft{ box-shadow: 0 12px 32px rgba(0,0,0,.18); }
+
+    /* Lighter default heading weight */
+    h1,h2,h3,h4{ font-weight:600; }
+  </style>
+</head>
+<body>
+  <div class="hero-bg"></div>
+
+  <!-- Top nav -->
+  <header class="max-w-6xl mx-auto px-5 pt-6">
+    <div class="flex items-center justify-between">
+      <a class="text-xl font-semibold tracking-wide" href="#" style="letter-spacing:.5px">
+        <span class="text-[var(--accent)]">FOO</span><span class="text-[#111]">DEAT</span>
+      </a>
+      <nav class="hidden sm:flex items-center gap-8 text-sm text-[#1b1b1b]">
+        <a class="nav-link active" href="#home">BERANDA</a>
+        <a class="nav-link" href="#menu">MENU</a>
+        <a class="nav-link" href="#about">TENTANG</a>
+        <a href="cart.html" class="relative">KERANJANG <span id="cart-count" class="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] rounded-full bg-[var(--accent)] text-white align-middle">0</span></a>
+        <button id="theme-toggle" aria-label="ganti tema" class="btn-soft text-xs">Tema</button>
+        <button aria-label="profil" class="w-8 h-8 rounded-full bg-white shadow-soft"></button>
+      </nav>
+      <!-- Mobile actions -->
+      <div class="sm:hidden flex items-center gap-3">
+        <a href="cart.html" class="relative text-sm">KERANJANG <span id="cart-count-mobile" class="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] rounded-full bg-[var(--accent)] text-white align-middle">0</span></a>
+        <button id="mobile-toggle" aria-label="buka menu" class="btn-soft text-sm">Menu</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="sm:hidden hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="relative bg-white/90 backdrop-blur-md border-b shadow-soft p-5 pt-16">
+      <button id="mobile-close" class="btn-soft absolute top-4 right-4 text-sm">Tutup</button>
+      <nav class="flex flex-col gap-4 text-sm text-[#1b1b1b]">
+        <a class="nav-link" href="#home">Beranda</a>
+        <a class="nav-link" href="#menu">Menu</a>
+        <a class="nav-link" href="#about">Tentang</a>
+        <a href="cart.html">Keranjang</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section id="home" class="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-10 md:gap-6 items-center mt-10">
+    <div class="order-2 md:order-1">
+      <h1 class="text-4xl md:text-5xl font-semibold leading-tight">Makanan Lezat<br/>Menanti Anda</h1>
+      <p class="text-[15px] text-[var(--muted)] mt-4 max-w-md">Tim perawat terdaftar dan tenaga kesehatan kami memberikan layanan perawatan di rumah.</p>
+      <div class="flex gap-4 mt-6">
+        <button class="btn-soft" data-variant="primary">Lihat Menu</button>
+        <button class="btn-soft">Pesan Meja</button>
+      </div>
+    </div>
+    <div class="order-1 md:order-2 flex justify-center">
+      <!-- Big bowl image (real food photo) -->
+      <div class="relative duration-300 transform hover:scale-105">
+        <img alt="poke bowl" loading="lazy" decoding="async" class="w-[420px] h-[420px] md:w-[470px] md:h-[470px] object-cover rounded-full floaty" 
+             src="images/pngtree-indomie-bacon-and-eggs-png-image_13344417.png"
+             onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''1000'' height=''1000''><defs><linearGradient id=''g'' x1=''0'' y1=''0'' x2=''1'' y2=''1''><stop stop-color=''%23ffd1a6'' offset=''0%''/><stop stop-color=''%23ff9a44'' offset=''100%''/></linearGradient></defs><rect width=''100%'' height=''100%'' fill='url(%23g)''/><text x=''50%'' y=''50%'' dominant-baseline=''middle'' text-anchor=''middle'' fill=''%23111'' font-family=''Inter,Arial,sans-serif'' font-size=''28''>Image%20unavailable</text></svg>'"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu Unggulan -->
+  <section id="menu" class="max-w-6xl mx-auto px-5 mt-16 md:mt-20">
+    <div class="text-center">
+      <h2 class="text-5xl font-semibold tracking-tight">Menu Unggulan</h2>
+      <p class="text-sm text-[var(--muted)] mt-1">Menu andalan kami</p>
+    </div>
+
+    <div class="mt-10 grid sm:grid-cols-3 gap-6">
+      <!-- Card 1 -->
+      <article class="glass transition-all  p-5 pt-7">
+        <div class="flex justify-center -mt-16 duration-300 transform hover:scale-105">
+          <div class="rounded-full shadow-hard">
+            <img loading="lazy" decoding="async" class="w-64 h-64 rounded-full  object-cover shadow-soft" alt="Ramen noodles" src="images/png-clipart-pasta-dish-on-plate-ramen-instant-noodle-mie-goreng-indomie-food-soups-miscellaneous-soup-thumbnail.png" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''800'' height=''800''><defs><linearGradient id=''g'' x1=''0'' y1=''0'' x2=''1'' y2=''1''><stop stop-color=''%23ffd1a6'' offset=''0%''/><stop stop-color=''%23ff9a44'' offset=''100%''/></linearGradient></defs><rect width=''100%'' height=''100%'' fill='url(%23g)''/><text x=''50%'' y=''50%'' dominant-baseline=''middle'' text-anchor=''middle'' fill=''%23111'' font-family=''Inter,Arial,sans-serif'' font-size=''22''>Image%20unavailable</text></svg>'" />
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="flex items-center gap-2 text-sm"><span class="star">★</span><span class="font-semibold">8.1</span></div>
+          <h3 class="font-semibold text-xl mt-1">Mi Tiga</h3>
+          <p class="text-[13px] text-[var(--muted)]">Piring putih dengan udang kering</p>
+          <a href="product.html?id=noodles-3" class="text-[13px] text-[var(--accent)] hover:underline mt-1 inline-block">Lihat detail</a>
+          <div class="flex justify-between items-center mt-4">
+            <span class="font-semibold">Rp12.000</span>
+            <button class="plus-btn add-to-cart" aria-label="Tambahkan Mi Tiga" data-id="noodles-3" data-name="Mi Tiga" data-price="12" data-image="images/png-clipart-pasta-dish-on-plate-ramen-instant-noodle-mie-goreng-indomie-food-soups-miscellaneous-soup-thumbnail.png"><span>＋</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2 (center) -->
+      <article class="glass p-5 pt-7 ">
+       <div class="flex justify-center -mt-16 duration-300 transform hover:scale-105">
+          <div class="rounded-full shadow-hard">
+            <img loading="lazy" decoding="async" class="w-64 h-64 rounded-full  object-cover shadow-soft" alt="Udon noodles" src="images/lovepik-egg-instant-noodles-png-image_401428067_wh1200.png" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''800'' height=''800''><defs><linearGradient id=''g'' x1=''0'' y1=''0'' x2=''1'' y2=''1''><stop stop-color=''%23ffd1a6'' offset=''0%''/><stop stop-color=''%23ff9a44'' offset=''100%''/></linearGradient></defs><rect width=''100%'' height=''100%'' fill='url(%23g)''/><text x=''50%'' y=''50%'' dominant-baseline=''middle'' text-anchor=''middle'' fill=''%23111'' font-family=''Inter,Arial,sans-serif'' font-size=''22''>Image%20unavailable</text></svg>'" />
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="flex items-center gap-2 text-sm"><span class="star">★</span><span class="font-semibold">9.2</span></div>
+          <h3 class="font-semibold text-xl mt-1">Mi Satu</h3>
+          <p class="text-[13px] text-[var(--muted)]">Mi rebus pedas dengan seafood dan daging babi dalam hot pot</p>
+          <a href="product.html?id=noodles-1" class="text-[13px] text-[var(--accent)] hover:underline mt-1 inline-block">Lihat detail</a>
+          <div class="flex justify-between items-center mt-4">
+            <span class="font-semibold">Rp20.000</span>
+            <button class="plus-btn add-to-cart" aria-label="Tambahkan Mi Satu" data-id="noodles-1" data-name="Mi Satu" data-price="20" data-image="images/lovepik-egg-instant-noodles-png-image_401428067_wh1200.png"><span>＋</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="glass p-5 pt-7">
+       <div class="flex justify-center -mt-16 duration-300 transform hover:scale-105">
+          <div class="rounded-full shadow-hard">
+            <img loading="lazy" decoding="async" class="w-64 h-64 rounded-full  object-cover shadow-soft" alt="Pad Thai noodles" src="images/pngtree-indomie-bacon-and-eggs-png-image_13344417.png" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''800'' height=''800''><defs><linearGradient id=''g'' x1=''0'' y1=''0'' x2=''1'' y2=''1''><stop stop-color=''%23ffd1a6'' offset=''0%''/><stop stop-color=''%23ff9a44'' offset=''100%''/></linearGradient></defs><rect width=''100%'' height=''100%'' fill='url(%23g)''/><text x=''50%'' y=''50%'' dominant-baseline=''middle'' text-anchor=''middle'' fill=''%23111'' font-family=''Inter,Arial,sans-serif'' font-size=''22''>Image%20unavailable</text></svg>'" />
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="flex items-center gap-2 text-sm"><span class="star">★</span><span class="font-semibold">8.5</span></div>
+          <h3 class="font-semibold text-xl mt-1">Mi Dua</h3>
+          <p class="text-[13px] text-[var(--muted)]">Mi sup pedas udang</p>
+          <a href="product.html?id=noodles-2" class="text-[13px] text-[var(--accent)] hover:underline mt-1 inline-block">Lihat detail</a>
+          <div class="flex justify-between items-center mt-4">
+            <span class="font-semibold">Rp16.000</span>
+            <button class="plus-btn add-to-cart" aria-label="Tambahkan Mi Dua" data-id="noodles-2" data-name="Mi Dua" data-price="16" data-image="images/pngtree-indomie-bacon-and-eggs-png-image_13344417.png"><span>＋</span></button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Fries feature -->
+  <section class="max-w-6xl mx-auto px-5 mt-20 md:mt-24 grid md:grid-cols-[1.2fr_1fr] gap-10 items-center">
+    <div class="relative">
+      <img alt="crispy french fries" loading="lazy" decoding="async" class="w-full max-w-xl mx-auto" src="images/pngtree-a-plate-of-golden-french-fries-png-image_13126753.png" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''1200'' height=''800''><defs><linearGradient id=''g'' x1=''0'' y1=''0'' x2=''1'' y2=''1''><stop stop-color=''%23ffd1a6'' offset=''0%''/><stop stop-color=''%23ff9a44'' offset=''100%''/></linearGradient></defs><rect width=''100%'' height=''100%'' fill='url(%23g)''/><text x=''50%'' y=''50%'' dominant-baseline=''middle'' text-anchor=''middle'' fill=''%23111'' font-family=''Inter,Arial,sans-serif'' font-size=''24''>Image%20unavailable</text></svg>'"/>
+    </div>
+    <div>
+      <h3 class="text-4xl md:text-5xl font-semibold leading-tight">Kentang Terbaik untuk<br/>Kentang Goreng</h3>
+      <p class="text-[15px] text-[var(--muted)] mt-3 max-w-md">Kentang Russet adalah pilihan ideal. Karena lebih padat, kandungan airnya tidak terlalu banyak sehingga bisa menjadi ekstra renyah.</p>
+    </div>
+  </section>
+
+  <!-- Services row like in mock -->
+  <section class="max-w-6xl mx-auto px-5 mt-12 mb-16">
+    <div class="text-center">
+      <h4 class="text-2xl font-semibold">Layanan Kami</h4>
+    </div>
+    <div class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto">
+      <div class="flex items-center gap-3"><span class="service-icon">🗓️</span><span>Online booking</span></div>
+      <div class="flex items-center gap-3"><span class="service-icon">🍽️</span><span>Catering service</span></div>
+      <div class="flex items-center gap-3"><span class="service-icon">🎫</span><span>Membership</span></div>
+      <div class="flex items-center gap-3"><span class="service-icon">🚚</span><span>Delivery service</span></div>
+    </div>
+  </section>
+
+  <footer class="text-center text-xs text-[var(--muted)] pb-10">© 2025 FOODEAT. Hak cipta dilindungi.</footer>
+
+  <!-- Toast add-to-cart -->
+  <div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-50 hidden">
+    <div class="glass px-4 py-3 flex items-center gap-3">
+      <span id="toast-msg">Ditambahkan ke keranjang</span>
+      <button id="toast-undo" class="btn-soft text-sm">Urungkan</button>
+      <button id="toast-close" class="btn-soft text-sm">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    // Nav active link demo
+    document.querySelectorAll('.nav-link').forEach(a=>{
+      a.addEventListener('click', e=>{
+        document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+        a.classList.add('active');
+      });
+    });
+
+    // Ripple on soft buttons
+    document.querySelectorAll('.btn-soft').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const r = document.createElement('span');
+        r.className='ripple';
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        r.style.width = r.style.height = size + 'px';
+        r.style.left = (e.clientX - rect.left - size/2) + 'px';
+        r.style.top  = (e.clientY - rect.top  - size/2) + 'px';
+        btn.appendChild(r);
+        setTimeout(()=>r.remove(), 700);
+      });
+    });
+
+    // Cart utils
+    const CART_KEY = 'cart';
+    const getCart = () => {
+      try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; }
+    };
+    const saveCart = (cart) => {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartCount();
+    };
+    const updateCartCount = () => {
+      const c = getCart().reduce((n, it) => n + (it.qty||0), 0);
+      const el = document.getElementById('cart-count');
+      if (el) el.textContent = String(c);
+      const elM = document.getElementById('cart-count-mobile');
+      if (elM) elM.textContent = String(c);
+    };
+    const addToCart = (item) => {
+      const cart = getCart();
+      const idx = cart.findIndex(i => i.id === item.id);
+      if (idx >= 0) cart[idx].qty += item.qty || 1; else cart.push({ ...item, qty: item.qty || 1 });
+      saveCart(cart);
+    };
+
+    updateCartCount();
+
+    // Format harga menu di beranda menjadi Rupiah berdasarkan data-price
+    const formatRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format;
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      const wrap = btn.closest('.flex');
+      const priceEl = wrap ? wrap.querySelector('span.font-semibold') : null;
+      if (!priceEl) return;
+      const raw = parseFloat(btn.dataset.price || '0');
+      const idr = raw < 1000 ? raw * 1000 : raw;
+      priceEl.textContent = formatRupiah(idr);
+    });
+
+    // Terjemahkan label layanan ke Bahasa Indonesia (fallback DOM)
+    document.querySelectorAll('.service-icon + span')
+      .forEach(el=>{
+        const t = (el.textContent||'').trim();
+        if (t === 'Online booking') el.textContent = 'Pemesanan online';
+        if (t === 'Catering service') el.textContent = 'Layanan katering';
+        if (t === 'Membership') el.textContent = 'Keanggotaan';
+        if (t === 'Delivery service') el.textContent = 'Layanan antar';
+      });
+
+    // Add-to-cart micro interaction + persist + toast undo
+    let lastAdded = null; let toastTimer = null;
+    const showToast = (message, undoCb) => {
+      const t = document.getElementById('toast');
+      const msg = document.getElementById('toast-msg');
+      const undo = document.getElementById('toast-undo');
+      const close = document.getElementById('toast-close');
+      if (!t) return;
+      msg.textContent = message || 'Ditambahkan ke keranjang';
+      t.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> t.classList.add('hidden'), 3000);
+      undo.onclick = () => { if (undoCb) undoCb(); t.classList.add('hidden'); };
+      close.onclick = () => t.classList.add('hidden');
+    };
+
+    document.querySelectorAll('.add-to-cart').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        // micro interaction
+        btn.animate([
+          { transform:'translateY(0) scale(1)' },
+          { transform:'translateY(-6px) scale(1.08)' },
+          { transform:'translateY(0) scale(1)' }
+        ], { duration: 280, easing:'cubic-bezier(.3,.7,.4,1)'});
+
+        // persist to cart
+        const item = {
+          id: btn.dataset.id || ('item-' + Math.random().toString(36).slice(2,7)),
+          name: btn.dataset.name || 'Item',
+          price: parseFloat(btn.dataset.price || '0'),
+          image: btn.dataset.image || '',
+        };
+        addToCart(item);
+        lastAdded = item;
+        showToast(`${item.name} ditambahkan`, () => {
+          // Undo: kurangi qty atau hapus
+          const cart = getCart();
+          const idx = cart.findIndex(i => i.id === item.id);
+          if (idx >= 0) {
+            cart[idx].qty = Math.max(0, (cart[idx].qty||1) - 1);
+            if (cart[idx].qty === 0) cart.splice(idx,1);
+            saveCart(cart);
+          }
+        });
+      })
+    });
+
+    // Mobile menu toggle
+    const mm = document.getElementById('mobile-menu');
+    const mt = document.getElementById('mobile-toggle');
+    const mc = document.getElementById('mobile-close');
+    if (mt && mm) mt.onclick = () => { mm.classList.toggle('hidden'); };
+    if (mc && mm) mc.onclick = () => { mm.classList.add('hidden'); };
+    if (mm) mm.addEventListener('click', (e)=>{ if (e.target === mm) mm.classList.add('hidden'); });
+    document.querySelectorAll('#mobile-menu a').forEach(a=> a.addEventListener('click', ()=> mm && mm.classList.add('hidden')));
+
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    const applyTheme = (t)=>{
+      const root = document.documentElement;
+      if (t==='dark') root.classList.add('dark'); else root.classList.remove('dark');
+      localStorage.setItem('theme', t);
+    };
+    const initTheme = ()=>{
+      const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      applyTheme(saved);
+    };
+    if (themeBtn) themeBtn.onclick = ()=>{
+      const now = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(now);
+    };
+    initTheme();
+  </script>
+</body>
+</html>

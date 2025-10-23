@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Keranjang Belanja - FOODEAT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#F59E0B; --text:#111111; --muted:#6B7280; --shadow: 0 20px 60px rgba(0,0,0,.22);
+    }
+    body{ font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background: #fff7ed; color:var(--text); }
+    .hero-bg{ position: fixed; inset: -20vmax; z-index:-1; filter: blur(55px);
+      background:
+        radial-gradient(60vmax 60vmax at 0% 15%, rgba(253,186,116,.55), transparent 65%),
+        radial-gradient(55vmax 55vmax at 90% 8%, rgba(251,146,60,.50), transparent 62%),
+        radial-gradient(70vmax 70vmax at 40% 65%, rgba(245,158,11,.35), transparent 60%),
+        linear-gradient(180deg, #fff7ed 0%, #fff1e6 100%);
+    }
+    .glass{ background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,247,235,.62)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.7); }
+    h1,h2,h3,h4{ font-weight:600; }
+    .btn-soft{ position:relative; padding:.6rem 1rem; border-radius:9999px; background:#f8fafc; color:#111; font-weight:500; border:1px solid rgba(0,0,0,.05); }
+  </style>
+</head>
+<body>
+  <div class="hero-bg"></div>
+  <header class="max-w-6xl mx-auto px-5 pt-6">
+    <div class="flex items-center justify-between">
+      <a class="text-xl font-semibold tracking-wide" href="index.html" style="letter-spacing:.5px">
+        <span class="text-[var(--accent)]">FOO</span><span class="text-[#111]">DEAT</span>
+      </a>
+      <nav class="hidden sm:flex items-center gap-8 text-sm text-[#1b1b1b]">
+        <a class="nav-link" href="index.html#home">BERANDA</a>
+        <a class="nav-link" href="index.html#menu">MENU</a>
+        <a href="cart.html" class="relative">KERANJANG <span id="cart-count" class="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] rounded-full bg-[var(--accent)] text-white align-middle">0</span></a>
+      </nav>
+      <!-- Mobile actions -->
+      <div class="sm:hidden flex items-center gap-3">
+        <a href="cart.html" class="relative text-sm">KERANJANG <span id="cart-count-mobile" class="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] rounded-full bg-[var(--accent)] text-white align-middle">0</span></a>
+        <button id="mobile-toggle" aria-label="buka menu" class="btn-soft text-sm">Menu</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="sm:hidden hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="relative bg-white/90 backdrop-blur-md border-b shadow-soft p-5 pt-16">
+      <button id="mobile-close" class="btn-soft absolute top-4 right-4 text-sm">Tutup</button>
+      <nav class="flex flex-col gap-4 text-sm text-[#1b1b1b]">
+        <a class="nav-link" href="index.html#home">Beranda</a>
+        <a class="nav-link" href="index.html#menu">Menu</a>
+        <a href="cart.html">Keranjang</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-5 mt-8 grid md:grid-cols-[1.3fr_0.7fr] gap-8">
+    <section class="space-y-4" id="items"></section>
+    <aside class="glass p-5 h-max sticky top-6">
+      <h2 class="text-xl">Ringkasan</h2>
+
+      <div class="mt-3">
+        <label for="promo" class="text-sm">Kode Promo</label>
+        <div class="mt-1 flex gap-2">
+          <input id="promo" class="flex-1 border rounded px-3 py-2 text-sm" placeholder="Masukkan kode (mis: HEMAT10, ONGKIR)" />
+          <button id="apply-promo" class="btn-soft text-sm">Terapkan</button>
+        </div>
+        <div id="promo-msg" class="text-xs mt-1 text-[var(--muted)]"></div>
+      </div>
+
+      <div class="mt-4">
+        <div class="text-sm" id="fs-text">Gratis ongkir sisa Rp0 lagi</div>
+        <div class="w-full h-2 bg-gray-200 rounded mt-2 overflow-hidden">
+          <div id="fs-bar" class="h-2 bg-[var(--accent)]" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-between text-sm"><span>Subtotal</span><span id="subtotal">Rp0</span></div>
+      <div class="mt-1 flex justify-between text-sm"><span>Diskon</span><span id="discount">-Rp0</span></div>
+      <div class="mt-1 flex justify-between text-sm"><span>Ongkir</span><span id="shipping">Rp0</span></div>
+      <div class="mt-1 flex justify-between text-sm"><span>Pajak (10%)</span><span id="tax">Rp0</span></div>
+      <div class="mt-2 border-t pt-2 flex justify-between font-semibold"><span>Total</span><span id="total">Rp0</span></div>
+      <button id="checkout" class="btn-soft mt-4" style="background: linear-gradient(180deg,#ffe9c9,#ffcf90)">Bayar</button>
+      <button id="clear" class="btn-soft mt-2">Kosongkan</button>
+    </aside>
+  </main>
+
+  <!-- Bottom bar mobile -->
+  <div class="sm:hidden fixed inset-x-0 bottom-0 z-40 bg-white/90 backdrop-blur border-t">
+    <div class="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
+      <div class="text-sm">Total: <span id="total-mobile" class="font-semibold">Rp0</span></div>
+      <a href="#" id="checkout-mobile" class="btn-soft" style="background: linear-gradient(180deg,#ffe9c9,#ffcf90)">Bayar</a>
+    </div>
+  </div>
+
+  <template id="tpl-item">
+    <div class="glass p-4 flex gap-4 items-center">
+      <img class="w-16 h-16 rounded object-cover"/>
+      <div class="flex-1">
+        <div class="font-semibold name">Produk</div>
+        <div class="text-[13px] text-[var(--muted)] price">Rp0</div>
+      </div>
+      <div class="inline-flex items-center border rounded-full overflow-hidden">
+        <button class="px-3 py-2 dec">-</button>
+        <span class="px-4 select-none qty">1</span>
+        <button class="px-3 py-2 inc">+</button>
+      </div>
+      <button class="ml-3 text-red-600 remove">Hapus</button>
+    </div>
+  </template>
+
+  <script>
+    const CART_KEY='cart';
+    const elItems = document.getElementById('items');
+    const tpl = document.getElementById('tpl-item');
+    const $ = s => document.querySelector(s);
+    const getCart = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
+    const saveCart = (cart) => { localStorage.setItem(CART_KEY, JSON.stringify(cart)); update(); };
+    const updateCartCount = () => {
+      const c=getCart().reduce((n,i)=>n+(i.qty||0),0);
+      const el=$('#cart-count'); if(el) el.textContent=String(c);
+      const elM=document.getElementById('cart-count-mobile'); if(elM) elM.textContent=String(c);
+    };
+
+    const formatRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format;
+
+    // Promo & Ongkir config
+    const PROMO_KEY='promoCode';
+    const FREE_SHIP_THRESHOLD = 50000; // Rp50.000
+    const SHIPPING_FEE = 10000;        // Rp10.000
+    const getPromo = () => (localStorage.getItem(PROMO_KEY)||'').toUpperCase().trim();
+    const setPromo = (code) => localStorage.setItem(PROMO_KEY, (code||'').toUpperCase().trim());
+    const getDiscount = (subtotal, code) => {
+      if (!code) return 0;
+      if (code === 'HEMAT10') return Math.min(subtotal*0.10, 20000); // maks Rp20k
+      if (code === 'FOODEAT5') return 5000;
+      return 0;
+    };
+
+    // Migrasi data lama: jika harga < 1000, asumsikan USD angka bulat -> konversi ke ribuan Rupiah
+    (function migrateOldCart(){
+      const cart = getCart();
+      let changed = false;
+      cart.forEach(it => {
+        if (typeof it.price === 'number' && it.price > 0 && it.price < 1000) {
+          it.price = Math.round(it.price * 1000);
+          changed = true;
+        }
+      });
+      if (changed) saveCart(cart); else updateCartCount();
+    })();
+
+    function render(){
+      elItems.innerHTML='';
+      const cart = getCart();
+      if(cart.length===0){
+        elItems.innerHTML = '<div class="text-center text-[var(--muted)]">Keranjang kosong. <a class="text-[var(--accent)] hover:underline" href="index.html#menu">Lihat menu</a></div>';
+        return;
+      }
+      cart.forEach((it, idx)=>{
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('img').src = it.image || '';
+        node.querySelector('img').setAttribute('loading','lazy');
+        node.querySelector('img').setAttribute('decoding','async');
+        node.querySelector('.name').textContent = it.name;
+        if (it.options && it.options.length) {
+          const opt = document.createElement('div');
+          opt.className='text-[12px] text-[var(--muted)]';
+          opt.textContent = it.options.join(', ');
+          node.querySelector('.name').after(opt);
+        }
+        if (it.note) {
+          const note = document.createElement('div');
+          note.className='text-[12px] text-[var(--muted)]';
+          note.textContent = 'Catatan: ' + it.note;
+          node.querySelector('.name').after(note);
+        }
+        node.querySelector('.price').textContent = formatRupiah(it.price);
+        node.querySelector('.qty').textContent = it.qty;
+        node.querySelector('.inc').onclick = ()=>{ cart[idx].qty++; saveCart(cart); };
+        node.querySelector('.dec').onclick = ()=>{ cart[idx].qty=Math.max(1,cart[idx].qty-1); saveCart(cart); };
+        node.querySelector('.remove').onclick = ()=>{ cart.splice(idx,1); saveCart(cart); };
+        elItems.appendChild(node);
+      });
+    }
+
+    function calc(){
+      const cart=getCart();
+      const subtotal=cart.reduce((s,i)=>s+i.price*i.qty,0);
+      const code = getPromo();
+      let discount = getDiscount(subtotal, code);
+      let shipping = subtotal >= FREE_SHIP_THRESHOLD ? 0 : SHIPPING_FEE;
+      if (code === 'ONGKIR') shipping = 0;
+      const tax=(subtotal - discount) * 0.10;
+      const total=(subtotal - discount) + shipping + tax;
+
+      document.getElementById('subtotal').textContent=formatRupiah(subtotal);
+      document.getElementById('discount').textContent='-' + formatRupiah(discount);
+      document.getElementById('shipping').textContent=formatRupiah(shipping);
+      document.getElementById('tax').textContent=formatRupiah(tax);
+      document.getElementById('total').textContent=formatRupiah(total);
+      const tm = document.getElementById('total-mobile'); if (tm) tm.textContent = formatRupiah(total);
+
+      // Gratis ongkir progress
+      const left = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
+      const pct = Math.min(100, Math.round((subtotal / FREE_SHIP_THRESHOLD) * 100));
+      const fsText = document.getElementById('fs-text');
+      const fsBar = document.getElementById('fs-bar');
+      if (subtotal >= FREE_SHIP_THRESHOLD || shipping === 0) {
+        fsText.textContent = 'Selamat! Anda mendapatkan gratis ongkir.';
+        fsBar.style.width = '100%';
+      } else {
+        fsText.textContent = `Gratis ongkir sisa ${formatRupiah(left)} lagi`;
+        fsBar.style.width = pct + '%';
+      }
+
+      const msg = document.getElementById('promo-msg');
+      const p = document.getElementById('promo'); if (p) p.value = code || '';
+      if (code) {
+        if (discount>0 || code==='ONGKIR') msg.textContent = `Kode ${code} diterapkan.`;
+        else msg.textContent = `Kode ${code} tidak valid.`;
+      } else {
+        msg.textContent = '';
+      }
+    }
+
+    function update(){ render(); calc(); updateCartCount(); }
+
+    document.getElementById('clear').onclick = ()=>{ localStorage.setItem(CART_KEY,'[]'); update(); };
+    document.getElementById('checkout').onclick = ()=>{
+      alert('Demo checkout: fitur belum diimplementasikan.');
+    };
+    const cm = document.getElementById('checkout-mobile'); if (cm) cm.onclick = ()=>{ document.getElementById('checkout').click(); };
+    const applyBtn = document.getElementById('apply-promo');
+    if (applyBtn) applyBtn.onclick = ()=>{
+      const code = (document.getElementById('promo').value||'').toUpperCase().trim();
+      setPromo(code);
+      update();
+    };
+
+    update();
+
+    // Mobile menu toggle
+    const mm = document.getElementById('mobile-menu');
+    const mt = document.getElementById('mobile-toggle');
+    const mc = document.getElementById('mobile-close');
+    if (mt && mm) mt.onclick = () => { mm.classList.toggle('hidden'); };
+    if (mc && mm) mc.onclick = () => { mm.classList.add('hidden'); };
+    if (mm) mm.addEventListener('click', (e)=>{ if (e.target === mm) mm.classList.add('hidden'); });
+    document.querySelectorAll('#mobile-menu a').forEach(a=> a.addEventListener('click', ()=> mm && mm.classList.add('hidden')));
+
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    const applyTheme = (t)=>{ const root=document.documentElement; if (t==='dark') root.classList.add('dark'); else root.classList.remove('dark'); localStorage.setItem('theme', t); };
+    const initTheme = ()=>{ const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); applyTheme(saved); };
+    if (themeBtn) themeBtn.onclick = ()=>{ const now = document.documentElement.classList.contains('dark') ? 'light' : 'dark'; applyTheme(now); };
+    initTheme();
+  </script>
+</body>
+</html>
